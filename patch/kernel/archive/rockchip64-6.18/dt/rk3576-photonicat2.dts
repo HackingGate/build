@@ -232,7 +232,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&m2_bt_en>;
 		radio-type = "bluetooth";
-		shutdown-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
+		shutdown-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_LOW>;
 	};
 
 	rfkill-pcie-wlan {
