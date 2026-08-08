@@ -310,12 +310,40 @@ function kernel_package_callback_linux_image() {
 		mkdir -p "${package_directory}${debian_kernel_hook_dir}/${script}.d" # create kernel hook dir, make sure.
 
 		kernel_package_hook_helper "${script}" <(
+			# The DKMS hook invoked via run-parts below builds out-of-tree modules against the
+			# linux-headers package, which ships its host tools (scripts/basic/fixdep, scripts/mod/modpost)
+			# unbuilt -- they are compiled by the linux-headers postinst, on target.
+			# dpkg does not order linux-headers before linux-image (there is no dependency between them,
+			# and there must not be: headers are optional), so linux-image can be configured first.
+			# When that happens every module build dies with "fixdep: not found" (exit 127).
+			# Build the host tools here if they are missing, so hook ordering stops mattering.
+			if [[ "${script}" == "postinst" ]]; then
+				cat <<- HOOK_FOR_HEADERS_BOOTSTRAP
+					armbian_hdr_dir="/usr/src/linux-headers-${kernel_version_family}"
+					if [ -d "\${armbian_hdr_dir}" ] && [ ! -x "\${armbian_hdr_dir}/scripts/basic/fixdep" ]; then
+						echo "Armbian: linux-headers unpacked but not configured yet; building its scripts so DKMS can run..."
+						armbian_ncpu=\$(grep -c 'processor' /proc/cpuinfo)
+						make -C "\${armbian_hdr_dir}" ARCH="${SRC_ARCH}" olddefconfig || true
+						make -C "\${armbian_hdr_dir}" ARCH="${SRC_ARCH}" -j\${armbian_ncpu} scripts || true
+						make -C "\${armbian_hdr_dir}" ARCH="${SRC_ARCH}" -j\${armbian_ncpu} M=scripts/mod || true
+					fi
+				HOOK_FOR_HEADERS_BOOTSTRAP
+			fi
+
 			# Common for all of postinst/postrm/preinst/prerm
 			cat <<- KERNEL_HOOK_DELEGATION # Reference: linux-image-6.1.0-7-amd64.postinst from Debian
 				export DEB_MAINT_PARAMS="\$*" # Pass maintainer script parameters to hook scripts
 				export INITRD=$(if_enabled_echo CONFIG_BLK_DEV_INITRD Yes No) # Tell initramfs builder whether it's wanted
 				# Run the same hooks Debian/Ubuntu would for their kernel packages.
-				test -d ${debian_kernel_hook_dir}/${script}.d && run-parts --arg="${kernel_version_family}" --arg="/${installed_image_path}" ${debian_kernel_hook_dir}/${script}.d
+				# Do NOT let a failing hook abort the script here (this runs under 'set -e'):
+				# the boot symlinks below must be updated even when e.g. a DKMS module fails to
+				# build, otherwise /boot/Image keeps pointing at an already-removed kernel and the
+				# machine does not boot. The hook exit code is re-raised at the end of the script,
+				# so the failure is still reported to dpkg and remains visible to the user.
+				armbian_hook_rc=0
+				if test -d ${debian_kernel_hook_dir}/${script}.d; then
+					run-parts --arg="${kernel_version_family}" --arg="/${installed_image_path}" ${debian_kernel_hook_dir}/${script}.d || armbian_hook_rc=\$?
+				fi
 			KERNEL_HOOK_DELEGATION
 
 			if [[ "${script}" == "preinst" ]]; then
@@ -350,6 +378,16 @@ function kernel_package_callback_linux_image() {
 					fi
 				HOOK_FOR_DEBIAN_COMPAT_SYMLINK
 			fi
+
+			# Re-raise a hook failure captured above, now that the boot symlinks are consistent.
+			# dpkg still marks the package as failed and the user still sees the original error,
+			# but the machine is left in a bootable state.
+			cat <<- KERNEL_HOOK_RESULT
+				if [ "\${armbian_hook_rc:-0}" != "0" ]; then
+					echo "Armbian: ${debian_kernel_hook_dir}/${script}.d reported failure (rc=\${armbian_hook_rc}); boot symlinks were updated anyway." >&2
+					exit "\${armbian_hook_rc}"
+				fi
+			KERNEL_HOOK_RESULT
 		)
 	done
 }
