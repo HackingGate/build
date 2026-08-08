@@ -1,0 +1,11 @@
+[Unit]
+Description=Route Config auto WWAN/MBIM power save
+Documentation=man:route-config(8)
+After=network-online.target NetworkManager.service systemd-networkd.service mbim-session.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/route-config-power-save-run --interval 5 --standby-disconnect-profile false --standby-keep-radio-on true --standby-radio-off-delay 300 --ignore-prefix wwan --ignore-prefix wwu --ignore-prefix ppp --ignore-prefix cdc-wdm --ignore-prefix tun --ignore-prefix wg
+StandardOutput=journal
+StandardError=journal

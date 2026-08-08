@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>External</short>
+  <description>For use on external networks. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <service name="ssh"/>
+  <masquerade/>
+  <forward-port port="5000" protocol="tcp" to-port="5000" to-addr="172.19.0.2"/>
+  <rule family="ipv4">
+    <source address="172.16.0.0/24"/>
+    <masquerade/>
+  </rule>
+  <rule family="ipv6">
+    <masquerade/>
+  </rule>
+  <rule family="ipv6">
+    <source address="fd00:16:0::/64"/>
+    <masquerade/>
+  </rule>
+  <interface name="wlan0"/>
+  <interface name="end0"/>
+  <interface name="wwu1u1i8"/>
+  <forward/>
+</zone>

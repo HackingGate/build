@@ -1,0 +1,68 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SYSFS_BASE="${SYSFS_BASE:-/sys/kernel/photonicat-pm}"
+SETTINGS_FILE="${SETTINGS_FILE:-/var/lib/photonicat-pm/settings}"
+
+log() {
+    echo "photonicat-pmu-settings: $*"
+}
+
+save() {
+    if [ ! -d "$SYSFS_BASE" ]; then
+        log "PMU sysfs not available, skipping save"
+        return 0
+    fi
+    mkdir -p "$(dirname "$SETTINGS_FILE")"
+    {
+        echo "status_led=$(cat "$SYSFS_BASE/status_led")"
+        echo "beeper=$(cat "$SYSFS_BASE/beeper")"
+        echo "net_status_led_on_time=$(cat "$SYSFS_BASE/net_status_led_on_time")"
+        echo "net_status_led_off_time=$(cat "$SYSFS_BASE/net_status_led_off_time")"
+        echo "net_status_led_repeat=$(cat "$SYSFS_BASE/net_status_led_repeat")"
+        echo "charger_on_auto_start=$(cat "$SYSFS_BASE/charger_on_auto_start")"
+    } > "$SETTINGS_FILE"
+    log "settings saved"
+}
+
+restore() {
+    if [ ! -d "$SYSFS_BASE" ]; then
+        log "PMU sysfs not available, skipping restore"
+        return 0
+    fi
+    if [ ! -f "$SETTINGS_FILE" ]; then
+        log "no saved settings found"
+        return 0
+    fi
+    local key val
+    while IFS='=' read -r key val; do
+        case "$key" in
+            status_led)
+                echo "$val" > "$SYSFS_BASE/status_led"
+                ;;
+            beeper)
+                echo "$val" > "$SYSFS_BASE/beeper"
+                ;;
+            net_status_led_on_time)
+                echo "$val" > "$SYSFS_BASE/net_status_led_on_time"
+                ;;
+            net_status_led_off_time)
+                echo "$val" > "$SYSFS_BASE/net_status_led_off_time"
+                ;;
+            net_status_led_repeat)
+                echo "$val" > "$SYSFS_BASE/net_status_led_repeat"
+                ;;
+            charger_on_auto_start)
+                echo "$val" > "$SYSFS_BASE/charger_on_auto_start"
+                ;;
+        esac
+    done < "$SETTINGS_FILE"
+    log "settings restored"
+}
+
+case "${1:-}" in
+    save) save ;;
+    restore) restore ;;
+    *) echo "Usage: $0 {save|restore}" >&2; exit 1 ;;
+esac

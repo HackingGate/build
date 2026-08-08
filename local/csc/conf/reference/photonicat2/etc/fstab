@@ -1,0 +1,8 @@
+# <file system>					<mount point>	<type>	<options>							<dump>	<pass>
+tmpfs						/tmp		tmpfs	defaults,nosuid							0	0
+UUID=64a555b5-3b1d-4c5e-8972-239e5119b4bd	/media/mmcboot	ext4    defaults,noatime,commit=120,errors=remount-ro,x-gvfs-hide	0	1
+/media/mmcboot/boot  				/boot		none	bind								0       0
+UUID=2c051735-32d1-4997-bd3f-c65ae10f0579	/		ext4	defaults,noatime,commit=120,errors=remount-ro,x-gvfs-hide	0	1
+
+/swapfile none swap sw 0 0
+/dev/mmcblk1p1 /media/sdcard ext4 defaults,nofail 0 2

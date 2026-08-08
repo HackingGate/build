@@ -1,0 +1,25 @@
+#!/bin/sh
+# NetworkManager dispatcher hook for route-config power save.
+#
+# Trigger the existing power-save service immediately on relevant NetworkManager
+# events so WWAN standby/resume does not wait for the next timer tick.
+
+set -eu
+
+ACTION="${2:-}"
+
+case "$ACTION" in
+    up|down|dhcp4-change|dhcp6-change|connectivity-change|reapply)
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+# Stay inert unless the timer is actively running. This keeps "stop power save"
+# semantics intact while still allowing event-driven sync when the feature is on.
+systemctl is-active --quiet route-config-power-save.timer || exit 0
+
+# Keep the dispatcher non-blocking for NetworkManager. The oneshot service
+# serializes actual work and reuses the existing /run state files.
+systemctl start --no-block route-config-power-save.service >/dev/null 2>&1 || true

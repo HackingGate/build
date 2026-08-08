@@ -1,0 +1,24 @@
+[Unit]
+Description=Aria2 download manager
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aria2
+Group=aria2
+UMask=002
+WorkingDirectory=/var/lib/aria2/downloads
+ExecStartPre=+/usr/bin/install -d -m 0775 -o aria2 -g aria2 /var/lib/aria2 /var/lib/aria2/downloads /var/lib/aria2/.config/aria2
+ExecStartPre=+/usr/bin/touch /var/lib/aria2/aria2.session
+ExecStartPre=+/usr/bin/chmod 0664 /var/lib/aria2/aria2.session
+ExecStartPre=+/usr/bin/chown aria2:aria2 /var/lib/aria2/aria2.session
+ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2/aria2.conf
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=30
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,44 @@
+{
+  "inbounds": [
+    {
+      "port": 13600,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "8284d809-vless_reality_vision",
+            "flow": "xtls-rprx-vision",
+            "id": "8284d809-08c0-43aa-ab37-171bd210f79f"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": "31305",
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "realitySettings": {
+          "dest": "swcdn.apple.com:443",
+          "maxTimeDiff": 70000,
+          "privateKey": "yNzdBVfbP_h5Hq4OXJamshMW98E6Eu185gG8Sr_jB0w",
+          "publicKey": "tVFoIpkW4bQo3pbVw4Tk6ZBOvWYjH0H1GzHr1apanzo",
+          "serverNames": [
+            "swcdn.apple.com"
+          ],
+          "shortIds": [
+            "",
+            "6ba85179e30d4fc2"
+          ],
+          "show": false,
+          "xver": 0
+        },
+        "security": "reality"
+      },
+      "tag": "VLESSReality"
+    }
+  ]
+}

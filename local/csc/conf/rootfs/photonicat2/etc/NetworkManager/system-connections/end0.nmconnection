@@ -1,0 +1,17 @@
+[connection]
+id=end0
+uuid=3a128d83-79b4-4b1a-9277-f7c1a812250a
+type=ethernet
+interface-name=end0
+zone=external
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto
+
+[proxy]

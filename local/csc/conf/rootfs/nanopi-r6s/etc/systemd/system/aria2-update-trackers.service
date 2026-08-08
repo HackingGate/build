@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh aria2 BitTorrent trackers
+After=network-online.target aria2c.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/aria2-update-trackers.sh

@@ -45,6 +45,42 @@ function apt_purge_unneeded_packages_and_clean_apt_caches() {
 	wait_for_disk_sync "after cleaning ${SDCARD}${dir_var_lib_apt_lists}"
 }
 
+function apt_lists_prune_inactive_armbian_mirror_cache() {
+	declare lists_dir="${LOCAL_APT_CACHE_INFO[SDCARD_LISTS_DIR]}"
+	declare armbian_source_file="${SDCARD}/etc/apt/sources.list.d/armbian.sources"
+
+	[[ -d "${lists_dir}" ]] || return 0
+
+	declare active_uri="" active_list_prefix=""
+	if [[ -f "${armbian_source_file}" ]]; then
+		active_uri="$(awk '$1 == "URIs:" { print $2; exit }' "${armbian_source_file}")"
+		if [[ -n "${active_uri}" ]]; then
+			active_list_prefix="${active_uri#http://}"
+			active_list_prefix="${active_list_prefix#https://}"
+			active_list_prefix="${active_list_prefix%/}"
+			active_list_prefix="${active_list_prefix//\//_}_dists_${RELEASE}_"
+		fi
+	fi
+
+	declare -a stale_armbian_lists=()
+	declare apt_list apt_list_basename
+	declare old_nullglob_state
+	old_nullglob_state="$(shopt -p nullglob || true)"
+	shopt -s nullglob
+	for apt_list in "${lists_dir}"/{apt.armbian.com,beta.armbian.com,mirrors.*_armbian}_dists_"${RELEASE}"_*; do
+		[[ -f "${apt_list}" ]] || continue
+		apt_list_basename="${apt_list##*/}"
+		[[ -n "${active_list_prefix}" && "${apt_list_basename}" == "${active_list_prefix}"* ]] && continue
+		stale_armbian_lists+=("${apt_list}")
+	done
+	eval "${old_nullglob_state}"
+
+	if (( ${#stale_armbian_lists[@]} > 0 )); then
+		display_alert "Removing inactive Armbian apt list cache entries" "${#stale_armbian_lists[@]} files" "info"
+		run_host_command_logged rm -fv "${stale_armbian_lists[@]}"
+	fi
+}
+
 function apt_lists_copy_from_host_to_image_and_update() {
 	display_alert "Copying host-side apt list cache into image" "apt-get update and clean image-side" "info"
 
@@ -54,6 +90,7 @@ function apt_lists_copy_from_host_to_image_and_update() {
 		run_host_command_logged mkdir -pv "${LOCAL_APT_CACHE_INFO[SDCARD_LISTS_DIR]}"
 		display_alert "Copying host-side local apt list cache dir" "${LOCAL_APT_CACHE_INFO[SDCARD_LISTS_DIR]}" "debug"
 		run_host_command_logged cp -pr "${LOCAL_APT_CACHE_INFO[HOST_LISTS_DIR]}"/* "${LOCAL_APT_CACHE_INFO[SDCARD_LISTS_DIR]}"/
+		apt_lists_prune_inactive_armbian_mirror_cache
 
 		# Count how many files we have in the lists dir.
 		local_apt_cache_lists_count="$(ls -1 "${LOCAL_APT_CACHE_INFO[SDCARD_LISTS_DIR]}" | wc -l)"

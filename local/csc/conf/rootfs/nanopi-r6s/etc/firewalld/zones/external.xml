@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>External</short>
+  <description>For use on external networks. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <port port="13600" protocol="tcp"/>
+  <masquerade/>
+  <rule family="ipv4">
+    <masquerade/>
+  </rule>
+  <rule family="ipv4">
+    <source address="192.168.6.0/24"/>
+    <masquerade/>
+  </rule>
+  <rule family="ipv6">
+    <source address="2404:9200:225:100::64"/>
+    <destination address="240b:11:1381:5200:6a:4913:8100:5200"/>
+    <protocol value="4"/>
+    <accept/>
+  </rule>
+  <interface name="wan"/>
+  <interface name="wanmap"/>
+  <forward/>
+</zone>

@@ -1,0 +1,12 @@
+[Unit]
+Description=Proxy WAN route monitor
+Documentation=man:route-config(8)
+After=network-online.target NetworkManager.service xray.service tun2socks.service
+Wants=network-online.target
+Requires=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/proxy-monitor
+StandardOutput=journal
+StandardError=journal

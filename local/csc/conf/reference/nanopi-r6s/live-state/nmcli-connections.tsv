@@ -1,0 +1,10 @@
+wanmap:2a7108d8-821c-4996-bc4e-1eab7c1e3249:ip-tunnel:wanmap
+wan:f41ec0cc-42b1-47a7-a636-da0dbdaaa598:802-3-ethernet:wan
+br0-lan:bb005bb2-e104-4644-a813-9637099abbac:bridge:br0
+lan1:dd1b1d14-877e-4e44-bcf6-752f9cd9f71e:802-3-ethernet:lan1
+lan2:bca4df8c-6c59-4bcf-bdbf-51660a5b1930:802-3-ethernet:lan2
+br-a504b4870c8c:125beaeb-9b9d-4ddc-a93f-e2d7ae837046:bridge:br-a504b4870c8c
+docker0:6949d69f-470f-4adf-a16c-6f1c90bbfae1:bridge:docker0
+lo:d0bf42ae-df61-40ba-89ea-0e34ccda7cde:loopback:lo
+br-22a433fda60e:33766fff-0606-4ff6-b341-3a6fa9bb09e7:bridge:br-22a433fda60e
+br-d78964a8e3f1:8deb1447-ba3d-4927-8744-9315a94214cb:bridge:br-d78964a8e3f1

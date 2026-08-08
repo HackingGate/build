@@ -1,0 +1,21 @@
+#!/bin/sh
+# NetworkManager dispatcher hook for route-config proxy monitor.
+#
+# Trigger the existing proxy-monitor service immediately on relevant
+# NetworkManager events so route snapshots and failed-service recovery do not
+# wait for the timer.
+
+set -eu
+
+ACTION="${2:-}"
+
+case "$ACTION" in
+    up|down|dhcp4-change|dhcp6-change|connectivity-change|reapply)
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+systemctl is-active --quiet proxy-monitor.timer || exit 0
+systemctl start --no-block proxy-monitor.service >/dev/null 2>&1 || true

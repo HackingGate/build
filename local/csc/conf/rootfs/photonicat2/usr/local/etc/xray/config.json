@@ -1,0 +1,132 @@
+{
+  "log": {
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "tag": "socks-in",
+      "listen": "127.0.0.1",
+      "port": 1080,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },
+    {
+      "tag": "http-in",
+      "listen": "127.0.0.1",
+      "port": 8080,
+      "protocol": "http",
+      "settings": {}
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {
+        "targetStrategy": "UseIPv4",
+        "domainStrategy": "UseIPv4"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "sockopt": {
+          "mark": 1
+        }
+      }
+    },
+    {
+      "protocol": "vless",
+      "tag": "proxy",
+      "settings": {
+        "vnext": [
+          {
+            "address": "106.73.19.129",
+            "port": 13600,
+            "users": [
+              {
+                "id": "8284d809-08c0-43aa-ab37-171bd210f79f",
+                "encryption": "none",
+                "flow": "xtls-rprx-vision-udp443"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "realitySettings": {
+          "publicKey": "tVFoIpkW4bQo3pbVw4Tk6ZBOvWYjH0H1GzHr1apanzo",
+          "shortId": "6ba85179e30d4fc2",
+          "serverName": "swcdn.apple.com",
+          "fingerprint": "chrome"
+        },
+        "security": "reality",
+        "network": "tcp",
+        "sockopt": {
+          "mark": 1
+        }
+      }
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "proxy",
+        "ip": [
+          "192.168.6.0/24"
+        ]
+      },
+      {
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "direct",
+        "type": "field"
+      }
+    ]
+  },
+  "dns": {
+    "servers": [
+      "localhost"
+    ]
+  },
+  "route-config.proxy.route-final": "direct",
+  "route-config.proxy.route-rules": [
+    {
+      "ifname": [
+        "wlan0"
+      ],
+      "outbound": "proxy"
+    },
+    {
+      "ifname": [
+        "wwu1u1i8"
+      ],
+      "ip": [
+        "192.168.6.0/24"
+      ],
+      "outbound": "proxy"
+    },
+    {
+      "ifname": [
+        "end0",
+        "end1"
+      ],
+      "outbound": "direct"
+    }
+  ],
+  "route-config.proxy.tun-route-address": [
+    "192.168.6.0/24"
+  ],
+  "route-config.proxy.tun-full-tunnel": true
+}

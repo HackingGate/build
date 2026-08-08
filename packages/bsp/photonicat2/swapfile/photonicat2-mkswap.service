@@ -1,0 +1,12 @@
+[Unit]
+Description=Create Photonicat2 persistent swapfile
+ConditionPathExists=!/swapfile
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/photonicat2-mkswap.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

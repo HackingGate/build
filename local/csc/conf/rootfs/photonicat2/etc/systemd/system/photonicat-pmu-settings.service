@@ -1,0 +1,10 @@
+[Unit]
+Description=Photonicat PMU settings persistence
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/photonicat-pmu-settings restore
+ExecStop=/usr/local/bin/photonicat-pmu-settings save
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,13 @@
+br0-lan:81e6c1b5-a9f1-48a9-979d-177f896a84f8:bridge:br0
+xray0:893b3278-11fc-4d2f-8872-fae20af97b80:tun:xray0
+br-d749acb1af9e:584f3ec7-b0ad-43c9-b4c0-a9e0467c91ce:bridge:br-d749acb1af9e
+lo:22f42fc0-f347-4b10-8a1a-5b71be4b369e:loopback:lo
+br-179ba8b00725:d86d33d9-bf3f-4bbf-b58c-899d5f9f92c6:bridge:br-179ba8b00725
+br-d84900a1fb45:35edcca8-8e9a-430d-a262-d680b739b96b:bridge:br-d84900a1fb45
+br-fcee27ab594e:0b20c46c-ba30-4280-9a69-f58462f1cc70:bridge:br-fcee27ab594e
+docker0:e8e92ad3-c7f0-47d6-a13d-1828f216dd2b:bridge:docker0
+virbr0:dd2c5172-c5eb-47a5-97b6-b65a6576691b:bridge:virbr0
+cdc-wdm0:6326174a-099b-49f0-ae12-1279e1debfce:gsm:
+end0:3a128d83-79b4-4b1a-9277-f7c1a812250a:802-3-ethernet:
+end1:00f79dd5-d857-4fc9-a161-5b93561fb99a:802-3-ethernet:
+wlan0-Buffalo-G-5130:a116c934-6e8f-40ae-95f1-235651045c3d:802-11-wireless:

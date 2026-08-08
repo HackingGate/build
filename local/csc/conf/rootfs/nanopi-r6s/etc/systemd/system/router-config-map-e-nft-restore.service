@@ -1,0 +1,12 @@
+[Unit]
+Description=Restore router-config MAP-E nftables rules
+After=network-online.target NetworkManager.service firewalld.service
+Wants=network-online.target
+ConditionPathExistsGlob=/etc/router-config/map-e.d/*.sh
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /etc/router-config/scripts/apply-map-e-nft.sh
+
+[Install]
+WantedBy=multi-user.target firewalld.service

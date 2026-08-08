@@ -1,0 +1,14 @@
+[connection]
+id=lan2
+uuid=bca4df8c-6c59-4bcf-bdbf-51660a5b1930
+type=ethernet
+controller=br0
+interface-name=lan2
+port-type=bridge
+timestamp=1777827180
+zone=internal
+
+[ethernet]
+cloned-mac-address=02:47:4E:70:94:C0
+
+[bridge-port]

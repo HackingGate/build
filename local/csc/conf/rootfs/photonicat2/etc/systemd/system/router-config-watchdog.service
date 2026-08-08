@@ -1,0 +1,12 @@
+[Unit]
+Description=Router Config modem watchdog
+Documentation=man:router-config(8)
+After=network-online.target NetworkManager.service ModemManager.service
+Wants=network-online.target ModemManager.service
+Requires=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/router-config-watchdog-run --target 8.8.8.8 --interval 60 --fail-threshold 5 --reset-threshold 10
+StandardOutput=journal
+StandardError=journal

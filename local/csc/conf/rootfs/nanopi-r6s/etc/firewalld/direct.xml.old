@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<direct>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-i br0 -o wan -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-i br0 -o wanmap -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-p icmp --icmp-type destination-unreachable -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-p icmp --icmp-type time-exceeded -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-p icmp --icmp-type parameter-problem -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="FORWARD" priority="0">-p icmp --icmp-type echo-request -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="FORWARD" priority="0">-i br0 -o wan -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="FORWARD" priority="0">-i br0 -o wanmap -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="FORWARD" priority="0">-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="FORWARD" priority="0">-p ipv6-icmp -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p icmp --icmp-type destination-unreachable -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p icmp --icmp-type time-exceeded -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p icmp --icmp-type parameter-problem -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p icmp --icmp-type echo-request -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p udp --sport 67 --dport 68 -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p udp -d 224.0.0.251 --dport 5353 -j ACCEPT</rule>
+  <rule ipv="ipv4" table="filter" chain="INPUT" priority="0">-p udp -d 239.255.255.250 --dport 1900 -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="INPUT" priority="0">-p ipv6-icmp -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="INPUT" priority="0">-p udp --sport 547 --dport 546 -j ACCEPT</rule>
+  <rule ipv="ipv6" table="filter" chain="INPUT" priority="0">-p udp -d ff02::fb --dport 5353 -j ACCEPT</rule>
+</direct>

@@ -1,0 +1,15 @@
+[Unit]
+Description=RM520N-GL MBIM session
+Documentation=man:mbim-network(1)
+BindsTo=dev-cdc\x2dwdm0.device
+After=dev-cdc\x2dwdm0.device systemd-networkd.service
+Wants=systemd-networkd.service
+Conflicts=ModemManager.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/mbim-network --profile=/etc/mbim-network.conf /dev/cdc-wdm0 start
+ExecStop=-/usr/bin/mbim-network --profile=/etc/mbim-network.conf /dev/cdc-wdm0 stop
+TimeoutStartSec=90
+TimeoutStopSec=30

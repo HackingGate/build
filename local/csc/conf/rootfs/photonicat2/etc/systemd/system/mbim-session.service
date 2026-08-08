@@ -1,0 +1,16 @@
+[Unit]
+Description=MBIM data session
+Documentation=man:mbim-network(1)
+BindsTo=dev-cdc\x2dwdm0.device
+After=dev-cdc\x2dwdm0.device systemd-networkd.service
+Wants=systemd-networkd.service
+Conflicts=ModemManager.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/mbim-network --profile=/etc/mbim-network.conf /dev/cdc-wdm0 start
+ExecStartPost=/bin/sh -c 'for i in /sys/class/net/wwu* /sys/class/net/wwan*; do [ -e "$$i" ] || continue; n=$${i##*/}; d=$$(readlink -f "$$i/device/driver" 2>/dev/null); [ "$${d##*/}" = cdc_mbim ] || continue; ip -4 addr flush dev "$$n"; networkctl reconfigure "$$n"; done; systemctl --no-block try-restart tun2socks.service 2>/dev/null || :'
+ExecStop=-/usr/bin/mbim-network --profile=/etc/mbim-network.conf /dev/cdc-wdm0 stop
+TimeoutStartSec=90
+TimeoutStopSec=30

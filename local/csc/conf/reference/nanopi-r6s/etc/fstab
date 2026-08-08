@@ -1,0 +1,7 @@
+# <file system>					<mount point>	<type>	<options>							<dump>	<pass>
+tmpfs						/tmp		tmpfs	defaults,nosuid							0	0
+UUID=a6200f69-e1fa-4c83-b396-3daac903962a	/		ext4	defaults,noatime,commit=120,errors=remount-ro,x-gvfs-hide	0	1
+
+# BEGIN router-config storage
+UUID=baa828fa-bd80-4303-8810-dbb20baa2967 /media/sda1 ext4 defaults,nofail 0 2
+# END router-config storage

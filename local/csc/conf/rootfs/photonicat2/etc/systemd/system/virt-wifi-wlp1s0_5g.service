@@ -1,0 +1,15 @@
+[Unit]
+Description=Create virtual Wi-Fi interface (wlp1s0_5g) on phy0
+After=systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+Before=hostapd@wlp1s0_5g.service
+ConditionPathExists=/sys/class/ieee80211/phy0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/iw phy phy0 interface add wlp1s0_5g type managed
+ExecStop=/usr/sbin/iw dev wlp1s0_5g del
+
+[Install]
+WantedBy=multi-user.target

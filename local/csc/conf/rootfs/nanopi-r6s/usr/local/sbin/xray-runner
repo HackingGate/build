@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+XRAY_BIN="${XRAY_BIN:-/usr/local/bin/xray}"
+XRAY_CONF_DIR="${XRAY_CONF_DIR:-/usr/local/etc/xray/conf}"
+
+exec "$XRAY_BIN" run -confdir "$XRAY_CONF_DIR"

@@ -1,0 +1,10 @@
+[Unit]
+Description=Router Config auto WWAN power save timer
+
+[Timer]
+OnBootSec=5s
+OnUnitActiveSec=5s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

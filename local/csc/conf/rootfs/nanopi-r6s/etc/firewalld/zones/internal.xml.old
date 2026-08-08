@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone target="ACCEPT">
+  <short>Internal</short>
+  <description>For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <service name="ssh"/>
+  <service name="mdns"/>
+  <service name="dhcp"/>
+  <service name="dhcpv6"/>
+  <service name="dns"/>
+  <service name="cockpit"/>
+  <service name="nfs"/>
+  <port port="13601" protocol="tcp"/>
+  <interface name="lan2"/>
+  <interface name="lan1"/>
+  <forward/>
+</zone>

@@ -1,0 +1,6 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "dnsLog": false
+  }
+}

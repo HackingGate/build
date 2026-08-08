@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh aria2 BitTorrent trackers periodically
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

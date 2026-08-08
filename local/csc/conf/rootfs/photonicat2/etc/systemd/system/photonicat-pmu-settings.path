@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch for Photonicat PMU sysfs interface
+
+[Path]
+PathExists=/sys/kernel/photonicat-pm/status_led
+
+[Install]
+WantedBy=multi-user.target

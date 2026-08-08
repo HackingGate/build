@@ -1,0 +1,11 @@
+[Unit]
+Description=Route Config system power smart policy
+Documentation=man:route-config(8)
+After=network-online.target NetworkManager.service systemd-networkd.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/route-config-system-power-policy-run --auto-policy rule-matrix --interval-secs 5 --battery-min-capacity-percent 80 --ignore-prefix wwan --ignore-prefix wwu --ignore-prefix ppp --ignore-prefix cdc-wdm --ignore-prefix tun --ignore-prefix wg --rule "route-config.system-power.rule-name=charging-low-battery;route-config.system-power.upower-on-battery-match=false;route-config.system-power.upower-state-match=any;route-config.system-power.battery-max-capacity-percent=95;route-config.system-power.powerprofiles-performance-degraded-match=any;route-config.system-power.default-route-match=any;route-config.system-power.modem-enabled-match=true;ActiveProfile=power-saver;route-config.system-power.cpu-online-cpus=0,1,2,3"
+StandardOutput=journal
+StandardError=journal

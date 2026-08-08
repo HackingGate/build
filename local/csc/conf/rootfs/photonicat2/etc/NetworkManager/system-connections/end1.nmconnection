@@ -1,0 +1,12 @@
+[connection]
+id=end1
+uuid=00f79dd5-d857-4fc9-a161-5b93561fb99a
+type=ethernet
+controller=br0
+interface-name=end1
+port-type=bridge
+zone=internal
+
+[ethernet]
+
+[bridge-port]

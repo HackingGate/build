@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Attach the M.2 E-key WCN6855's Bluetooth as a serdev child of uart2.
+ *
+ * Second attempt at reaching this radio: enabling usb_drd1 in host mode
+ * found nothing on u2phy1, so the module's BT is not on USB here. E-key
+ * also carries UART, uart2 (m2 mux) is enabled on this board with no
+ * consumer, and the installed qca/hpbtfw21.tlv + hpnv21.* firmware is
+ * exactly what btqca loads for WCN6855 over serdev.
+ *
+ * The base DT's rfkill-pcie-bluetooth node owns BT_EN (GPIO0_PD0); it is
+ * disabled here so hci_qca can drive that line via enable-gpios. swctrl
+ * and the vdd* supplies are optional in the driver (dummy regulators are
+ * substituted) and the module is self-powered from the slot's 3.3 V.
+ *
+ * max-speed is 1500000, not the 3200000 seen on Qualcomm hosts: the
+ * dw-apb-uart sclk is 24 MHz and 1.5 M divides it exactly.
+ */
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/rockchip.h>
+
+/ {
+	compatible = "ariaboard,photonicat2", "rockchip,rk3576";
+
+	fragment@0 {
+		target-path = "/rfkill-pcie-bluetooth";
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	fragment@1 {
+		target = <&uart2>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart2m2_xfer>, <&uart2m2_ctsn>, <&uart2m2_rtsn>;
+			status = "okay";
+
+			bluetooth {
+				compatible = "qcom,wcn6855-bt";
+				enable-gpios = <&gpio0 RK_PD0 GPIO_ACTIVE_HIGH>;
+				max-speed = <1500000>;
+			};
+		};
+	};
+};

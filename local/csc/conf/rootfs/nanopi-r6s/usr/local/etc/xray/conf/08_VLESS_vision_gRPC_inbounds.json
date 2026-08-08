@@ -1,0 +1,29 @@
+{
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 13600,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "email": "8284d809-vless_reality_grpc",
+            "id": "8284d809-08c0-43aa-ab37-171bd210f79f"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "grpcSettings": {
+          "multiMode": true,
+          "serviceName": "grpc"
+        },
+        "network": "grpc",
+        "sockopt": {
+          "acceptProxyProtocol": true
+        }
+      },
+      "tag": "VLESSRealityGRPC"
+    }
+  ]
+}
