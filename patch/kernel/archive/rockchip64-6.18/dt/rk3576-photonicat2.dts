@@ -1005,6 +1005,7 @@
 		compatible = "photonicat-pm";
 		baudrate = <115200>;
 		force-poweroff-timeout = <60>;
+		pmu-button-mode = "input";
 		pm-version = <2>;
 		power-gpio = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
 		#thermal-sensor-cells = <0>;
